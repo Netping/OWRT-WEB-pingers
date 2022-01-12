@@ -1,0 +1,129 @@
+<%+header%>
+<link rel='stylesheet' href='/luci-static/netping/owrt_web_pingers.css'>
+<script src='/luci-static/netping/owrt_web_pingers.js'></script>
+<%
+local config, title = "pingerconf", "Whatcher"
+cursor_pingers = luci.model.uci.cursor()
+
+--------------- Excluding constants --------------------
+protocol_list = cursor_pingers:get_list(config, "globals", "protocol")
+maxpingers = cursor_pingers:get(config, "globals","maxpingers")
+default_pinger_name = cursor_pingers:get(config, "pinger_prototype","name")
+default_pinger_address = cursor_pingers:get(config, "pinger_prototype","address")
+default_pinger_state = cursor_pingers:get(config, "pinger_prototype","state")
+default_pinger_protocol = cursor_pingers:get(config, "pinger_prototype","protocol")
+default_pinger_size = cursor_pingers:get(config, "pinger_prototype","size")
+default_pinger_timeout = cursor_pingers:get(config, "pinger_prototype","timeout")
+default_pinger_tries = cursor_pingers:get(config, "pinger_prototype","tries")
+default_pinger_nofails = cursor_pingers:get(config, "pinger_prototype","nofails")
+--------------- End of excluding constants --------------------
+
+------------- Commit changes -------------
+if ((luci.http.formvalue("pinger_for_change_commit")~="0") and (luci.http.formvalue("pinger_for_change_commit")~=nil)) then
+	commit_pinger = luci.http.formvalue("pinger_for_change_commit")
+	cursor_pingers:set(config, commit_pinger, "name", luci.http.formvalue("change_name"))
+	cursor_pingers:set(config, commit_pinger, "address", luci.http.formvalue("change_address"))
+	cursor_pingers:set(config, commit_pinger, "protocol", luci.http.formvalue("change_protocol"))
+	cursor_pingers:set(config, commit_pinger, "size", luci.http.formvalue("change_size"))
+	cursor_pingers:set(config, commit_pinger, "timeout",luci.http.formvalue("change_timeout"))
+	cursor_pingers:set(config, commit_pinger, "tries", luci.http.formvalue("change_tries"))
+	change_no_fails = luci.http.formvalue("change_no_fails")
+	cursor_pingers:set(config, commit_pinger, "nofails", ((type(change_no_fails)=="table") and (table.concat(change_no_fails)) or change_no_fails))
+	cursor_pingers:set(config, commit_pinger, "description", luci.http.formvalue("change_description"))
+
+    elseif (luci.http.formvalue("pinger_for_delete")~="0") then
+	cursor_pingers:delete(config, luci.http.formvalue("pinger_for_delete"))
+    elseif (luci.http.formvalue("pinger_for_add")=="1") then
+	add_pinger = cursor_pingers:add(config, "pinger")
+	cursor_pingers:set(config, add_pinger, "name", default_pinger_name)
+	cursor_pingers:set(config, add_pinger, "address", default_pinger_address)
+	cursor_pingers:set(config, add_pinger, "state", default_pinger_state)
+	cursor_pingers:set(config, add_pinger, "protocol", default_pinger_protocol)
+	cursor_pingers:set(config, add_pinger, "size", default_pinger_size)
+	cursor_pingers:set(config, add_pinger, "timeout", default_pinger_timeout)
+	cursor_pingers:set(config, add_pinger, "tries", default_pinger_tries)
+	cursor_pingers:set(config, add_pinger, "nofails", default_pinger_nofails)
+	cursor_pingers:set(config, add_pinger, "description", "")
+    else
+	local key, val
+	pingers_state_value = {}
+        for key, val in pairs(luci.http.formvalue()) do
+		pingers_state_value[key] = tonumber((type(val)=="table") and (table.concat(val)) or val)
+		cursor_pingers:set(config, key, "state", tonumber((type(val)=="table") and (table.concat(val)) or val))
+        end
+end
+	cursor_pingers:save()
+	cursor_pingers:commit(config)
+	string_for_ubus = "ubus send commit '{"..' "config" : "pingerconf" '.."}'"
+	luci.sys.call(string_for_ubus)
+
+------------- End of commit changes -------------
+%>
+
+<h2><%:Pingers for whatcher%></h2> 
+<h3><%:Attention! Max pingers and rules number for processing:%> <%=maxpingers%></h3> 
+<div class='pinger' style='margin-bottom: 5px;'><div class='pinger_checkbox'><%:On/Off%></div>
+<div class='pinger_name'><%:Name%></div><div class='status'><%:Status%></div>
+<div class='pinger_description'><%:Description%></div></div>
+<form id="pinger_checkbox_form" name="pinger_checkbox_form" method="post" action="./">
+<%
+
+cursor_pingers:foreach(config, "pinger", function(s)
+if s[".name"] == 'pinger_prototype' then return end
+	luci.http.write("<div class='pinger'><div class='pinger_checkbox'><input type='hidden' ".." value='0' id='"..s[".name"].."' name='"..s[".name"].."' />")
+	luci.http.write("<input type='checkbox' "..((s.state)=='1' and 'checked' or '').." value='1' id='"..s[".name"].."' name='"..s[".name"].."' onclick=document.getElementById('pinger_checkbox_form').submit(); /></div>")
+	luci.http.write("<div class='pinger_name'>"..s.name.."</div><div class='status' id='status_"..s.name.."' name='status_"..s[".name"].."'></div>")
+	luci.http.write("<div class='pinger_description'>"..((s.description~=nil) and (s.description) or "").."</div>") %>
+
+		<div class='settings'><input type='button' value='<%:Settings%>' class='pinger_button' onclick='pinger_settings("<%=s[".name"]%>")' /></div>
+		<div class='delete'><input type='button' value='<%:Delete%>' class='pinger_button' onclick='pinger_delete("<%=s[".name"]%>")' /></div></div> 
+<%  end) %>
+		<div class='pinger'><div class='add_pinger'><input type='button' value='<%:Add pinger%>' class='pinger_button' onclick='pinger_add()' /></div></div>
+	<input type="hidden" id="pinger_for_delete" name="pinger_for_delete" value="0" />
+	<input type="hidden" id="pinger_for_change" name="pinger_for_change" value="0" />
+	<input type="hidden" id="pinger_for_add" name="pinger_for_add" value="0" />
+</form>
+
+    <% if ((luci.http.formvalue("pinger_for_change")~="0") and (luci.http.formvalue("pinger_for_change")~=nil)) then
+    pinger_for_change = luci.http.formvalue("pinger_for_change")
+    change_pinger_name = cursor_pingers:get(config, pinger_for_change,"name")
+    change_pinger_description = cursor_pingers:get(config, pinger_for_change,"description")
+    change_pinger_protocol = cursor_pingers:get(config, pinger_for_change,"protocol")
+    change_pinger_address = cursor_pingers:get(config, pinger_for_change,"address")
+    change_pinger_timeout = cursor_pingers:get(config, pinger_for_change,"timeout")
+    change_pinger_size = cursor_pingers:get(config, pinger_for_change,"size")
+    change_pinger_tries = cursor_pingers:get(config, pinger_for_change,"tries")
+    change_pinger_nofails = cursor_pingers:get(config, pinger_for_change,"nofails") %>
+
+<div id='div_gray_background' class='gray_background'><div id='div_settings_window' class='settings_window'>
+<form id="pinger_change_form" name="pinger_change_form" method="post" action="./">
+    <label class="change_field">Name</label><div class="change_field"><input name="change_name" class="change_field" type="Value" value="<%=change_pinger_name%>"/></div><br>
+    <label class="change_field">Description</label><div class="change_field"><input name="change_description" class="change_field" type="Value" value="<%=change_pinger_description%>" /></div><br>
+    <label class="change_field">Protocol</label><div class="change_field">
+    <select name="change_protocol" class="change_field" type="Value" value="<%=change_pinger_protocol%>">
+	<% for i=1,#protocol_list do %>
+	    <option value='<%=protocol_list[i]%>' <%=(change_pinger_protocol==protocol_list[i] and 'selected' or '')%>><%=protocol_list[i]%></option>
+	<% end %>
+    </select></div><br>
+    <label class="change_field">Address</label><div class="change_field"><input name="change_address" class="change_field" type="Value" value="<%=change_pinger_address%>" /></div><br>
+    <label class="change_field">Timeout</label><div class="change_field"><input name="change_timeout" class="change_field" type="Value" value="<%=change_pinger_timeout%>" /></div><br>
+    <label class="change_field">Size</label><div class="change_field"><input name="change_size" class="change_field" type="Value" value="<%=change_pinger_size%>" /></div><br>
+    <label class="change_field">Tries</label><div class="change_field"><input name="change_tries" class="change_field" type="Value" value="<%=change_pinger_tries%>" /></div><br>
+    <label class="change_field">No fails</label>
+	<div class="change_field">
+	    <input name="change_no_fails" type="hidden" value="0" />
+	    <input name="change_no_fails" class="change_checkbox" type="checkbox" <%=(change_pinger_nofails~='0' and 'checked' or '')%> value='1' />
+	</div><br>
+    <div style="float: right;">
+    <input type='button' value='<%:Save%>' class='pinger_button' onclick="pinger_settings_commit('<%=pinger_for_change%>');" />
+    &nbsp;
+    <input type='button' value='<%:Close%>' class='pinger_button' onclick="pinger_settings_hide();" />
+    </div>
+    <input type="hidden" id="pinger_for_change_commit" name="pinger_for_change_commit" value="0" />
+</form>
+</div></div>
+    <script>pinger_settings_unhide();</script>
+
+<%  end %>
+<script>window.setInterval(pinger_refresh.bind(), 5000);</script>
+<%+footer%>
