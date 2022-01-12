@@ -39,13 +39,13 @@ install:
 	chmod +x $(INSTALL_DIR)$(WWW_STATUS_DIR)rule_status.cgi
 
 clean:
-	rm -R .$(LUCI_SOURCE_DIR)
-	rm -R .$(WWW_SOURCE_DIR)
+	rm -rf .$(LUCI_SOURCE_DIR)
+	rm -rf .$(WWW_SOURCE_DIR)
   
 remove:
 	rm -f $(INSTALL_DIR)$(WWW_STATUS_DIR)pinger_status.cgi
 	rm -f $(INSTALL_DIR)$(WWW_STATUS_DIR)rule_status.cgi
 	rm -f $(INSTALL_DIR)$(WWW_SCC_JS)owrt_web_pingers.*
-	rm -R $(INSTALL_DIR)$(LUCI_CONTROLLER_DIR)
+	rm -rf $(INSTALL_DIR)$(LUCI_CONTROLLER_DIR)
 	rm -f $(INSTALL_DIR)$(LUCI_VIEW_DIR)pingers.htm
 	rm -f $(INSTALL_DIR)$(LUCI_VIEW_DIR)rules.htm
