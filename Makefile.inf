@@ -27,25 +27,25 @@ configure:
 	@echo "Nothing to do"
 
 install:
-  mkdir -p $(INSTALL_DIR)$(LUCI_CONTROLLER_DIR)
-  mkdir -p $(INSTALL_DIR)$(LUCI_VIEW_DIR)
-  mkdir -p $(INSTALL_DIR)$(WWW_STATUS_DIR)
-  mkdir -p $(INSTALL_DIR)$(WWW_SCC_JS)
+	mkdir -p $(INSTALL_DIR)$(LUCI_CONTROLLER_DIR)
+	mkdir -p $(INSTALL_DIR)$(LUCI_VIEW_DIR)
+	mkdir -p $(INSTALL_DIR)$(WWW_STATUS_DIR)
+	mkdir -p $(INSTALL_DIR)$(WWW_SCC_JS)
 	cp -r .$(LUCI_SOURCE_DIR)index.lua $(INSTALL_DIR)$(LUCI_CONTROLLER_DIR)
-  cp -r .$(LUCI_SOURCE_DIR)*.htm $(INSTALL_DIR)$(LUCI_VIEW_DIR)
+	cp -r .$(LUCI_SOURCE_DIR)*.htm $(INSTALL_DIR)$(LUCI_VIEW_DIR)
 	cp -r .$(WWW_SOURCE_DIR)*.cgi $(INSTALL_DIR)$(WWW_STATUS_DIR)
 	cp -r .$(WWW_SOURCE_DIR)owrt_web_pingers.* $(INSTALL_DIR)$(WWW_SCC_JS)
 	chmod +x $(INSTALL_DIR)$(WWW_STATUS_DIR)pinger_status.cgi
-  chmod +x $(INSTALL_DIR)$(WWW_STATUS_DIR)rule_status.cgi
+	chmod +x $(INSTALL_DIR)$(WWW_STATUS_DIR)rule_status.cgi
 
 clean:
 	rm -f .$(LUCI_SOURCE_DIR)
-  rm -f .$(WWW_SOURCE_DIR)
+	rm -f .$(WWW_SOURCE_DIR)
   
 remove:
-  rm -f $(INSTALL_DIR)$(WWW_STATUS_DIR)pinger_status.cgi
-  rm -f $(INSTALL_DIR)$(WWW_STATUS_DIR)rule_status.cgi
-  rm -f $(INSTALL_DIR)$(WWW_SCC_JS)owrt_web_pingers.*
-  rm -f $(INSTALL_DIR)$(LUCI_CONTROLLER_DIR)
-  rm -f $(INSTALL_DIR)$(LUCI_VIEW_DIR)pingers.htm
-  rm -f $(INSTALL_DIR)$(LUCI_VIEW_DIR)rules.htm
+	rm -f $(INSTALL_DIR)$(WWW_STATUS_DIR)pinger_status.cgi
+	rm -f $(INSTALL_DIR)$(WWW_STATUS_DIR)rule_status.cgi
+	rm -f $(INSTALL_DIR)$(WWW_SCC_JS)owrt_web_pingers.*
+	rm -f $(INSTALL_DIR)$(LUCI_CONTROLLER_DIR)
+	rm -f $(INSTALL_DIR)$(LUCI_VIEW_DIR)pingers.htm
+	rm -f $(INSTALL_DIR)$(LUCI_VIEW_DIR)rules.htm
