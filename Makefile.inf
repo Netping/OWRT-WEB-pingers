@@ -16,7 +16,7 @@ LUCI_CONTROLLER_DIR=/usr/lib/lua/luci/controller/owrt_web_pingers/
 LUCI_VIEW_DIR=/usr/lib/lua/luci/view/
 WWW_STATUS_DIR=/www/cgi-bin/
 WWW_SCC_JS=/www/luci-static/netping/
-INSTALL_DIR=~/1
+INSTALL_DIR=
 
 .PHONY: install
 
