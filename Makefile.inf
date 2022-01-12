@@ -41,6 +41,7 @@ install:
 clean:
 	rm -rf .$(LUCI_SOURCE_DIR)
 	rm -rf .$(WWW_SOURCE_DIR)
+	rm -rf Makefile*
   
 remove:
 	rm -f $(INSTALL_DIR)$(WWW_STATUS_DIR)pinger_status.cgi
