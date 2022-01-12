@@ -13,7 +13,7 @@ MODULE_NAME=owrt_web_pingers
 LUCI_SOURCE_DIR=/lucisrc/
 WWW_SOURCE_DIR=/www/
 LUCI_CONTROLLER_DIR=/usr/lib/lua/luci/controller/owrt_web_pingers/
-LUCI_VIEW_DIR=/usr/lib/lua/luci/view/
+LUCI_VIEW_DIR=/usr/lib/lua/luci/view/owrt_web_pingers/
 WWW_STATUS_DIR=/www/cgi-bin/
 WWW_SCC_JS=/www/luci-static/netping/
 INSTALL_DIR=
@@ -32,7 +32,7 @@ install:
 	mkdir -p $(INSTALL_DIR)$(WWW_STATUS_DIR)
 	mkdir -p $(INSTALL_DIR)$(WWW_SCC_JS)
 	cp -r .$(LUCI_SOURCE_DIR)index.lua $(INSTALL_DIR)$(LUCI_CONTROLLER_DIR)
-	cp -r .$(LUCI_SOURCE_DIR)*.htm $(INSTALL_DIR)$(LUCI_VIEW_DIR)owrt_web_pingers/
+	cp -r .$(LUCI_SOURCE_DIR)*.htm $(INSTALL_DIR)$(LUCI_VIEW_DIR)
 	cp -r .$(WWW_SOURCE_DIR)*.cgi $(INSTALL_DIR)$(WWW_STATUS_DIR)
 	cp -r .$(WWW_SOURCE_DIR)owrt_web_pingers.* $(INSTALL_DIR)$(WWW_SCC_JS)
 	chmod +x $(INSTALL_DIR)$(WWW_STATUS_DIR)pinger_status.cgi
@@ -48,4 +48,4 @@ remove:
 	rm -f $(INSTALL_DIR)$(WWW_STATUS_DIR)rule_status.cgi
 	rm -f $(INSTALL_DIR)$(WWW_SCC_JS)owrt_web_pingers.*
 	rm -rf $(INSTALL_DIR)$(LUCI_CONTROLLER_DIR)
-	rm -rf $(INSTALL_DIR)$(LUCI_VIEW_DIR)owrt_web_pingers/
+	rm -rf $(INSTALL_DIR)$(LUCI_VIEW_DIR)
