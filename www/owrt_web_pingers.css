@@ -1,0 +1,142 @@
+
+div.pinger {
+    width: 850px;
+    text-align: left;
+    border-bottom: 1px double black;
+    display: inline-block;
+    min-height: 25px;
+    vertical-align: middle;
+}
+
+div.pinger_checkbox {
+    width: 30px;
+    text-align: center;
+    border: 0px double black;
+    display: inline-block;
+    min-height: 10px;
+    vertical-align: middle;
+}
+
+div.pinger_name {
+    width: 200px;
+    text-align: center;
+    border: 0px double black;
+    display: inline-block;
+    min-height: 10px;
+    vertical-align: middle;
+}
+
+div.pinger_description {
+    width: 300px;
+    text-align: center;
+    border: 0px double black;
+    display: inline-block;
+    min-height: 10px;
+    vertical-align: middle;
+}
+
+div.status {
+    width: 100px;
+    text-align: center;
+//    background-color: grey;
+    border: 0px single black;
+    display: inline-block;
+    min-height: 10px;
+    font-size: 13px;
+    vertical-align: middle;
+    padding-right: 5px;
+}
+
+div.settings {
+    border: 0px single black;
+    width: 100px;
+    height: 23px;
+    display: inline-block;
+    vertical-align: middle;
+//    background-image: url(/luci-static/resources/netping/icons/settings.gif);
+//    background-repeat: no-repeat;
+    margin-right: 5px;
+}
+
+div.delete {
+    border: 0px single black;
+    width: 100px;
+    height: 23px;
+    display: inline-block;
+    vertical-align: middle;
+//    background-image: url(/luci-static/resources/netping/icons/delete.gif);
+//    background-repeat: no-repeat;
+}
+
+div.add_pinger {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    vertical-align: middle;
+//  background-image: url(/luci-static/resources/netping/icons/add.png);
+//  background-repeat: no-repeat;
+    margin-top: 15px;
+}
+
+div.div_settings {
+    display: none;
+}
+
+a.settings_link {
+    color: green;
+    float: right;
+}
+
+input.pinger_button {
+    width: 100px;
+    height: 22px;
+    vertical-align: middle;
+}
+
+div.settings_window {
+    width: 550px;
+    height: 350px;
+    text-align: left;
+    padding: 15px;
+    border: 2px solid black;
+    background-color: #ffffff;
+    border-radius: 10px;
+    color: #0000cc;
+    display: block;
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    margin: auto;
+}
+
+div.gray_background {
+    background: rgba(255, 255, 255, 0.8);
+    height: 222px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+}
+
+.change_field {
+    display: inline-block;
+    margin-left: 5px;
+    width: 400px;
+}
+
+label.change_field { width: 100px; }
+
+div.change_field { margin-bottom: 5px; }
+
+.change_textarea { 
+    display: inline-block;
+    margin-left: 5px;
+    width: 400px;
+    margin-bottom: 5px; 
+    height: 150px; 
+}
+
+input.change_checkbox {
+    margin-left: 5px;
+    display: inline-block;
+}
