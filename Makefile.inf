@@ -18,14 +18,18 @@ WWW_STATUS_DIR=/www/cgi-bin/
 WWW_SCC_JS=/www/luci-static/netping/
 INSTALL_DIR=
 
-.PHONY: install
+.PHONY: all
+
+all:
+	make configure
+	make install
 
 build:
 	@echo "Nothing to do"
 
 configure:
-	@echo "Nothing to do"
-
+	chmod +x .$(WWW_SOURCE_DIR)*.cgi
+	
 install:
 	mkdir -p $(INSTALL_DIR)$(LUCI_CONTROLLER_DIR)
 	mkdir -p $(INSTALL_DIR)$(LUCI_VIEW_DIR)
@@ -35,8 +39,6 @@ install:
 	cp -r .$(LUCI_SOURCE_DIR)*.htm $(INSTALL_DIR)$(LUCI_VIEW_DIR)
 	cp -r .$(WWW_SOURCE_DIR)*.cgi $(INSTALL_DIR)$(WWW_STATUS_DIR)
 	cp -r .$(WWW_SOURCE_DIR)owrt_web_pingers.* $(INSTALL_DIR)$(WWW_SCC_JS)
-	chmod +x $(INSTALL_DIR)$(WWW_STATUS_DIR)pinger_status.cgi
-	chmod +x $(INSTALL_DIR)$(WWW_STATUS_DIR)rule_status.cgi
 
 clean:
 	rm -rf .$(LUCI_SOURCE_DIR)
