@@ -20,13 +20,13 @@ INSTALL_DIR=
 
 .PHONY: all
 
-all: configure install
+all: install configure
 
 build:
 	@echo "Nothing to do"
 
 configure:
-	chmod +x .$(WWW_SOURCE_DIR)*.cgi
+	chmod +x .$(WWW_STATUS_DIR)*.cgi
 	
 install:
 	mkdir -p $(INSTALL_DIR)$(LUCI_CONTROLLER_DIR)
