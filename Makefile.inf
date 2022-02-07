@@ -1,6 +1,6 @@
 SECTION="NetPing modules"
 CATEGORY="Base"
-TITLE="OWRT WEB Watcher - Pingers and Rules"
+TITLE="OWRT-WEB-pingers"
 
 PKG_NAME="OWRT-WEB-pingers"
 PKG_VERSION=0.1
