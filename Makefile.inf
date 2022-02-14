@@ -38,11 +38,10 @@ install:
 	cp -r .$(WWW_SOURCE_DIR)*.cgi $(INSTALL_DIR)$(WWW_STATUS_DIR)
 	cp -r .$(WWW_SOURCE_DIR)owrt_web_pingers.* $(INSTALL_DIR)$(WWW_SCC_JS)
 
-clean:
-	rm -rf .$(LUCI_SOURCE_DIR)
-	rm -rf .$(WWW_SOURCE_DIR)
-	rm -rf Makefile*
-  
+clean: remove
+
+ipk: build install
+
 remove:
 	rm -f $(INSTALL_DIR)$(WWW_STATUS_DIR)pinger_status.cgi
 	rm -f $(INSTALL_DIR)$(WWW_STATUS_DIR)rule_status.cgi
