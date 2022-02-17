@@ -18,3 +18,4 @@ parsed_result = luci.jsonc.parse(exec_str_result)
 	print (val)
     end
 end)
+print (nixio.fs.stat("/etc/config/pingerconf").mtime)
