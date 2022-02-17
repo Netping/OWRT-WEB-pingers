@@ -48,6 +48,7 @@ end
 	string_for_ubus = "ubus send commit '{"..' "config" : "pingerconf" '.."}'"
 	luci.sys.call(string_for_ubus)
 ------------- End of commit changes -------------
+	config_mtime = nixio.fs.stat("/etc/config/"..config).mtime
 %>
 
 <h2><%:Rules for whatcher%></h2> 
@@ -66,7 +67,7 @@ if s[".name"] == 'rule_prototype' then return end
 	luci.http.write("<div class='pinger_description'>"..((s.description~=nil) and (s.description) or "").."</div>") %>
 
 		<div class='settings'><input type='button' value='<%:Settings%>' class='pinger_button' onclick='pinger_settings("<%=s[".name"]%>")' /></div>
-		<div class='delete'><input type='button' value='<%:Delete%>' class='pinger_button' onclick='pinger_delete("<%=s[".name"]%>")' /></div></div> 
+		<div class='delete'><input type='button' value='<%:Delete%>' class='pinger_button' onclick='pinger_delete("<%=s[".name"]%>", "<%:Delete this item?%>")' /></div></div> 
 <%  end) %>
 		<div class='pinger'><div class='add_pinger'><input type='button' value='<%:Add rule%>' class='pinger_button' onclick='pinger_add()' /></div></div>
 	<input type="hidden" id="pinger_for_delete" name="pinger_for_delete" value="0" />
@@ -104,7 +105,7 @@ if s[".name"] == 'rule_prototype' then return end
     <div style="float: right;">
     <input type='button' value='<%:Save%>' class='pinger_button' onclick="pinger_settings_commit('<%=pinger_for_change%>');" />
     &nbsp;
-    <input type='button' value='<%:Close%>' class='pinger_button' onclick="pinger_settings_hide();" />
+    <input type='button' value='<%:Close%>' class='pinger_button' onclick="rule_settings_hide();" />
     </div>
     <input type="hidden" id="pinger_for_change_commit" name="pinger_for_change_commit" value="0" />
 </form>
@@ -112,6 +113,17 @@ if s[".name"] == 'rule_prototype' then return end
     <script>pinger_settings_unhide();</script>
 
 <%  end %>
-<script>window.setInterval(rule_refresh.bind(), 5000);</script>
-<%+footer%>
 
+<form id="pinger_refresh_form" name="pinger_refresh_form" method="get" action="./rules"></form>
+
+<script>
+document.getElementById("indicators").innerHTML = '<span data-indicator="poll-status" data-clickable="true" data-style="active"><%:Refreshing%></span>';
+config_mtime = <%=config_mtime%>
+
+<% if not((luci.http.formvalue("pinger_for_change")~="0") and (luci.http.formvalue("pinger_for_change")~=nil)) then %>
+ajax_request = window.setInterval(rule_refresh.bind(), 5000);
+<% end %>
+
+</script>
+
+<%+footer%>
