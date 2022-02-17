@@ -12,6 +12,15 @@ background_settings_div = document.getElementById('div_gray_background');
 background_settings_div.style.display = "none";
 settings_div = document.getElementById('div_settings_window');
 settings_div.style.display = "none";
+ajax_request = window.setInterval(pinger_refresh.bind(), 5000);
+}
+
+function rule_settings_hide () {
+background_settings_div = document.getElementById('div_gray_background');
+background_settings_div.style.display = "none";
+settings_div = document.getElementById('div_settings_window');
+settings_div.style.display = "none";
+ajax_request = window.setInterval(rule_refresh.bind(), 5000);
 }
 
 function pinger_settings_unhide () {
@@ -23,7 +32,6 @@ background_settings_div.style.height = (scrollHeight + 25)+ "px";
 }
 
 function pinger_settings_commit (pinger_id) {
-//alert(pinger_id);
 document.getElementById('pinger_for_change_commit').value=pinger_id;
 document.getElementById('pinger_change_form').submit(); 
 }
@@ -37,11 +45,12 @@ function pinger_add() {
 document.getElementById('pinger_for_add').value="1"
 document.getElementById('pinger_checkbox_form').submit(); }
 
-function pinger_delete(pinger_id) {
-if (confirm ("Вы действительно хотите удалить этот элемент?")) {
+function pinger_delete(pinger_id, text_del) {
+clearInterval(ajax_request);
+if (confirm (text_del)) {
 document.getElementById('pinger_for_delete').value = pinger_id;
-document.getElementById('pinger_checkbox_form').submit(); 
-}}
+document.getElementById('pinger_checkbox_form').submit(); } 
+ajax_request = window.setInterval(pinger_refresh.bind(), 5000); }
 
 function pinger_refresh() {
     var stat_ref = new XMLHttpRequest(); 
@@ -49,6 +58,7 @@ function pinger_refresh() {
     stat_ref.onreadystatechange = function () { 
     if (stat_ref.readyState === XMLHttpRequest.DONE && stat_ref.status === 200) {
     	    var lines_ref = stat_ref.responseText.split("\n");
+	if ((lines_ref[lines_ref.length - 2])!=config_mtime) { document.getElementById('pinger_refresh_form').submit(); }
 	for (let i=0; i < (lines_ref.length-1); i=i+3) {
 	name = lines_ref[i]; state = lines_ref[i+1]; status = lines_ref[i+2]; status_view ="";
 	    if (state == 0) { status_view = "--"; }
@@ -57,7 +67,7 @@ function pinger_refresh() {
 	    else { status_view = "<span style='color: red;'>Error</span>"; }
 		}
 		document.getElementById('status_' + name).innerHTML = status_view; }
-	    }}
+	}}
 stat_ref.send();
 }
 
@@ -67,6 +77,7 @@ function rule_refresh() {
     stat_ref.onreadystatechange = function () { 
     if (stat_ref.readyState === XMLHttpRequest.DONE && stat_ref.status === 200) {
     	    var lines_ref = stat_ref.responseText.split("\n");
+	if ((lines_ref[lines_ref.length - 2])!=config_mtime) { document.getElementById('pinger_refresh_form').submit(); }
 	for (let i=0; i < (lines_ref.length-1); i=i+3) {
 	name = lines_ref[i]; state = lines_ref[i+1]; status = lines_ref[i+2]; status_view ="";
 	    if (state == 0) { status_view = "--"; }
