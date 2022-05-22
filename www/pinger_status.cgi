@@ -9,7 +9,8 @@ cursor_pingers = luci.model.uci.cursor()
 
 cursor_pingers:foreach(config, "pinger", function(s)
 if s[".name"] == 'pinger_prototype' then return end
-print (s.name)
+if (s.name==nil) then return end
+print (s[".name"])
 exec_str = "ubus call owrt_pingers get_pinger_state '{"..'"name":'..'"'..s.name..'"'.."}'"
 exec_str_result = luci.sys.exec(exec_str)
 parsed_result = luci.jsonc.parse(exec_str_result)
@@ -17,5 +18,6 @@ parsed_result = luci.jsonc.parse(exec_str_result)
     for key, val in pairs(parsed_result) do
 	print (val)
     end
-end)
-print (nixio.fs.stat("/etc/config/pingerconf").mtime)
+end
+)
+--print (nixio.fs.stat("/etc/config/pingerconf").mtime)

@@ -9,6 +9,7 @@ cursor_pingers = luci.model.uci.cursor()
 
 cursor_pingers:foreach(config, "rule", function(s)
 if s[".name"] == 'rule_prototype' then return end
+if (s.name==nil) then return end
 print (s.name)
 exec_str = "ubus call owrt_pingers get_rule_state '{"..'"name":'..'"'..s.name..'"'.."}'"
 exec_str_result = luci.sys.exec(exec_str)
@@ -18,4 +19,4 @@ parsed_result = luci.jsonc.parse(exec_str_result)
 	print (val)
     end
 end)
-print (nixio.fs.stat("/etc/config/pingerconf").mtime) 
+--print (nixio.fs.stat("/etc/config/pingerconf").mtime) 

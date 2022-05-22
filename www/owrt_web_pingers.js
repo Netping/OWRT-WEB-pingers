@@ -58,7 +58,6 @@ function pinger_refresh() {
     stat_ref.onreadystatechange = function () { 
     if (stat_ref.readyState === XMLHttpRequest.DONE && stat_ref.status === 200) {
     	    var lines_ref = stat_ref.responseText.split("\n");
-	if ((lines_ref[lines_ref.length - 2])!=config_mtime) { document.getElementById('pinger_refresh_form').submit(); }
 	for (let i=0; i < (lines_ref.length-1); i=i+3) {
 	name = lines_ref[i]; state = lines_ref[i+1]; status = lines_ref[i+2]; status_view ="";
 	    if (state == 0) { status_view = "--"; }
@@ -77,7 +76,6 @@ function rule_refresh() {
     stat_ref.onreadystatechange = function () { 
     if (stat_ref.readyState === XMLHttpRequest.DONE && stat_ref.status === 200) {
     	    var lines_ref = stat_ref.responseText.split("\n");
-	if ((lines_ref[lines_ref.length - 2])!=config_mtime) { document.getElementById('pinger_refresh_form').submit(); }
 	for (let i=0; i < (lines_ref.length-1); i=i+3) {
 	name = lines_ref[i]; state = lines_ref[i+1]; status = lines_ref[i+2]; status_view ="";
 	    if (state == 0) { status_view = "--"; }
