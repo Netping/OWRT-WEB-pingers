@@ -8,14 +8,14 @@ cursor_pingers = luci.model.uci.cursor()
 --------------- Excluding constants --------------------
 protocol_list = cursor_pingers:get_list(config, "globals", "protocol")
 maxpingers = cursor_pingers:get(config, "globals","maxpingers")
-default_pinger_name = cursor_pingers:get(config, "pinger_prototype","name")
-default_pinger_address = cursor_pingers:get(config, "pinger_prototype","address")
-default_pinger_state = cursor_pingers:get(config, "pinger_prototype","state")
-default_pinger_protocol = cursor_pingers:get(config, "pinger_prototype","protocol")
-default_pinger_size = cursor_pingers:get(config, "pinger_prototype","size")
-default_pinger_timeout = cursor_pingers:get(config, "pinger_prototype","timeout")
-default_pinger_tries = cursor_pingers:get(config, "pinger_prototype","tries")
-default_pinger_nofails = cursor_pingers:get(config, "pinger_prototype","nofails")
+default_pinger_name = cursor_pingers:get(config, "pinger_prototype","name"); default_pinger_name = ((default_pinger_name==nil) and "" or default_pinger_name)
+default_pinger_address = cursor_pingers:get(config, "pinger_prototype","address"); default_pinger_address = ((default_pinger_address==nil) and "" or default_pinger_address)
+default_pinger_state = cursor_pingers:get(config, "pinger_prototype","state"); default_pinger_state = ((default_pinger_state==nil) and "" or default_pinger_state)
+default_pinger_protocol = cursor_pingers:get(config, "pinger_prototype","protocol"); default_pinger_protocol = ((default_pinger_protocol==nil) and "" or default_pinger_protocol)
+default_pinger_size = cursor_pingers:get(config, "pinger_prototype","size"); default_pinger_size = ((default_pinger_size==nil) and "" or default_pinger_size)
+default_pinger_timeout = cursor_pingers:get(config, "pinger_prototype","timeout"); default_pinger_timeout = ((default_pinger_timeout==nil) and "" or default_pinger_timeout)
+default_pinger_tries = cursor_pingers:get(config, "pinger_prototype","tries"); default_pinger_tries = ((default_pinger_tries==nil) and "" or default_pinger_tries)
+default_pinger_nofails = cursor_pingers:get(config, "pinger_prototype","nofails"); default_pinger_nofails = ((default_pinger_nofails==nil) and "" or default_pinger_nofails)
 --------------- End of excluding constants --------------------
 
 ------------- Commit changes -------------
@@ -71,15 +71,18 @@ end
 
 cursor_pingers:foreach(config, "pinger", function(s)
 if s[".name"] == 'pinger_prototype' then return end
+
+s.name = ((s.name==nil) and default_pinger_name or s.name); s.state = ((s.state==nil) and default_pinger_state or s.state); s.description = ((s.description==nil) and '' or s.description)
+
 	luci.http.write("<div class='pinger'><div class='pinger_checkbox'><input type='hidden' ".." value='0' id='"..s[".name"].."' name='"..s[".name"].."' />")
 	luci.http.write("<input type='checkbox' "..((s.state)=='1' and 'checked' or '').." value='1' id='"..s[".name"].."' name='"..s[".name"].."' onclick=document.getElementById('pinger_checkbox_form').submit(); /></div>")
-	luci.http.write("<div class='pinger_name'>"..s.name.."</div><div class='status' id='status_"..s.name.."' name='status_"..s[".name"].."'></div>")
+	luci.http.write("<div class='pinger_name'>"..s.name.."</div><div class='status' id='status_"..s[".name"].."' name='status_"..s[".name"].."'></div>")
 	luci.http.write("<div class='pinger_description'>"..((s.description~=nil) and (s.description) or "").."</div>") %>
 
 		<div class='settings'><input type='button' value='<%:Settings%>' class='pinger_button' onclick='pinger_settings("<%=s[".name"]%>")' /></div>
-		<div class='delete'><input type='button' value='<%:Delete%>' class='pinger_button' onclick='pinger_delete("<%=s[".name"]%>", "<%:Delete this item?%>")' /></div></div> 
+		<div class='delete'><input type='button' value='<%:Delete%>' class='delete_button' onclick='pinger_delete("<%=s[".name"]%>", "<%:Delete this item?%>")' /></div></div> 
 <%  end) %>
-		<div class='pinger'><div class='add_pinger'><input type='button' value='<%:Add pinger%>' class='pinger_button' onclick='pinger_add()' /></div></div>
+		<div class='pinger1'><div class='add_pinger'><input type='button' value='<%:Add pinger%>' class='delete_button' onclick='pinger_add()' /></div></div>
 	<input type="hidden" id="pinger_for_delete" name="pinger_for_delete" value="0" />
 	<input type="hidden" id="pinger_for_change" name="pinger_for_change" value="0" />
 	<input type="hidden" id="pinger_for_add" name="pinger_for_add" value="0" />
@@ -87,14 +90,14 @@ if s[".name"] == 'pinger_prototype' then return end
 
     <% if ((luci.http.formvalue("pinger_for_change")~="0") and (luci.http.formvalue("pinger_for_change")~=nil)) then
     pinger_for_change = luci.http.formvalue("pinger_for_change")
-    change_pinger_name = cursor_pingers:get(config, pinger_for_change,"name")
-    change_pinger_description = cursor_pingers:get(config, pinger_for_change,"description")
-    change_pinger_protocol = cursor_pingers:get(config, pinger_for_change,"protocol")
-    change_pinger_address = cursor_pingers:get(config, pinger_for_change,"address")
-    change_pinger_timeout = cursor_pingers:get(config, pinger_for_change,"timeout")
-    change_pinger_size = cursor_pingers:get(config, pinger_for_change,"size")
-    change_pinger_tries = cursor_pingers:get(config, pinger_for_change,"tries")
-    change_pinger_nofails = cursor_pingers:get(config, pinger_for_change,"nofails") %>
+    change_pinger_name = cursor_pingers:get(config, pinger_for_change,"name"); change_pinger_name = ((change_pinger_name==nil) and default_pinger_name or change_pinger_name)
+    change_pinger_description = cursor_pingers:get(config, pinger_for_change,"description"); change_pinger_description = ((change_pinger_description==nil) and "" or change_pinger_description)
+    change_pinger_protocol = cursor_pingers:get(config, pinger_for_change,"protocol"); change_pinger_protocol = ((change_pinger_protocol==nil) and default_pinger_protocol or change_pinger_protocol)
+    change_pinger_address = cursor_pingers:get(config, pinger_for_change,"address"); change_pinger_address = ((change_pinger_address==nil) and default_pinger_address or change_pinger_address)
+    change_pinger_timeout = cursor_pingers:get(config, pinger_for_change,"timeout"); change_pinger_timeout = ((change_pinger_timeout==nil) and default_pinger_timeout or change_pinger_timeout)
+    change_pinger_size = cursor_pingers:get(config, pinger_for_change,"size"); change_pinger_size = ((change_pinger_size==nil) and default_pinger_size or change_pinger_size)
+    change_pinger_tries = cursor_pingers:get(config, pinger_for_change,"tries"); change_pinger_tries = ((change_pinger_tries==nil) and default_pinger_tries or change_pinger_tries)
+    change_pinger_nofails = cursor_pingers:get(config, pinger_for_change,"nofails"); change_pinger_nofails = ((change_pinger_nofails==nil) and default_pinger_nofails or change_pinger_nofails) %>
 
 <div id='div_gray_background' class='gray_background'><div id='div_settings_window' class='settings_window'>
 <form id="pinger_change_form" name="pinger_change_form" method="post" action="./">
@@ -135,6 +138,7 @@ document.getElementById("indicators").innerHTML = '<span data-indicator="poll-st
 config_mtime = <%=config_mtime%>
 <% if not((luci.http.formvalue("pinger_for_change")~="0") and (luci.http.formvalue("pinger_for_change")~=nil)) then %>
 ajax_request = window.setInterval(pinger_refresh.bind(), 5000);
+refreshing_xhr = XHR.poll(5, '/cgi-bin/luci/admin/administration/owrt_web_pingers/refresh', {}, function(x) { if (config_mtime != x.responseText) { location.reload(); }}); 
 <% end %>
 </script>
 <%+footer%>
